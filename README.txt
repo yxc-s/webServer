@@ -1,29 +1,25 @@
-WebServer
+# WebServer
 
-简介:
-该项目于2024.02开发，旨在学习网络通信的相关知识，并使用C++编写网络框架，来巩固应用场景中对于所学知识的运用。
-该框架的设计思想基于socket网络编程的C++高性能server框架 + bridge（用于服务器内部处理http与socket框架的通信) + http基础框架的结合。
-其中server接受并管理网络连接，bridge将有请求的连接交给http模块进行解析并响应。
+## Introduction
+This project was initiated in February 2024 with the aim of learning about network communications. It involves writing a network framework in C++ to apply knowledge gained in practical scenarios. The design philosophy of the framework is based on a high-performance C++ server framework utilizing sockets, combined with a bridge for handling communications between HTTP and the socket framework internally, and a basic HTTP framework. The server handles network connections, while the bridge routes requests to the HTTP module for parsing and response.
 
+## Technology Stack
+- C++17
+- Thread pool
+- Min-heap timers
+- HTTP data parsing and response
+- RAII (Resource Acquisition Is Initialization)
 
-技术栈:
-C++17
-线程池
-小顶堆计时器
-http数据解析与响应
-RAII
+## Usage
+1. In a Linux environment, navigate to the `build` directory and run the following command in the terminal: cmake..
+2. Navigate to the `bin` folder and execute: cmake hpts
+3. To start the server, run: ./hpts
+4. Access the server using a browser at `ip:port`.
+5. IP address and port can be configured in `./config/socketbaseconfig.ini`.
+6. Place static resources in `./static/pages`.
 
+## TODO
+- Implement a logging system.
+- Integrate a database.
 
-使用方式：
-1、linux环境下，进入build文件夹，终端输入：cmake..
-2、进入bin文件夹，终端输入cmake hpts
-3、运行服务器: ./hpts
-4、浏览器访问ip+端口
-5、ip地址和端口在./config/socketbaseconfig.ini中配置
-6、静态资源放到./satic/pages中
-
-TODO：
-日志系统。
-数据库。
-
-
+Thank you for exploring this project, and I hope it serves as a valuable tool for learning and application in network programming.
