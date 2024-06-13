@@ -1,0 +1,146 @@
+修改了connection，将返回值state改成了int
+
+调整了server初始化个构造中acceptor和reactor的顺序，不然会有警告
+
+在线程池的push函数中，加入任务之前的锁那里加了一个变量lock
+
+在sockethandler类中增加了current_events_, in_epoll_,两个变量以及获得两个变量状态的函数
+在epoll类中增加了判断当前要加入的handler是否已经被监听，如果已经被监听，则只修改事件，否则将注册事件并且设置in_epoll为true
+在epoll类中增加了读取事件时设置handler的current_events_为events_[i].events，方便根据本次请求的状态调用对应的处理函数
+对于acceptor来说，只有listen即可，至于其他的业务逻辑都在connection类中实现
+
+更改了各个文件初始化函数中的初始化先后顺序，消除了警告
+
+
+
+day13:
+	在server的断开连接函数中，增加了删除connection前先close（）	//其实不手动关闭也可以，socket类的xigouhanshu是有close的
+	在reactor和sockethandler和epoll之中增加了pop()函数，在连接被删除之前先从epoll事件表中删除事件
+
+
+增加了小堆记时器，集成在类reactor中，子reacotr有记时功能。timeout在server中设置（构造时）。
+
+两个问题：
+	1：连接后如果没有读请求，那么不会开始倒计时
+	2：倒计时结束后连接断开，但是再发送消息好像不能恢复
+
+
+
+day14:
+	将客户端简单更改为具有掉线重连机制的客户端
+	里清除了关于堆和read函数调用deleteconnection的冲突问题(deleteconnoection会先检测fd，检测不到就不删了）
+	在push handler到epoll中时，直接对把该fd加入堆中，为了防止出现一直加入事件但是没有请求的情况
+	timeout除了acceptor之外永远不设置-1
+	在堆中也设置了timeout，当堆空的时候返回这个最大等待时间。 在server选择使用堆时进行timeout初始化。（server->reactor->heap);
+	把server的删除连接函数返回值改成了bool，在调用时可以根据返回值判断是否删除成功（感觉以后写日至会用到）
+	
+	
+	要不要在连接断开时主动取检测堆中是否要删除当前删除fd呢（复杂度log(n))
+
+	准备写http类：在connection中写一个api，这个api获取handler当前请求的事件以及fd，将fd跟事件传递给外部函数进行处理。
+			也就是说，业务层的逻辑可以完全写在外面了！在我们sockbase内部，只要提供一个事件跟fd就可以了。而connection
+			就是内部跟外部的交互处。
+	写了简单的逻辑，buffer，http和handler，由于一个fd要绑定一个httphandler，所以到时候可能需要一个httpconnection从中间中转fd，
+	然后再好好写写请求和响应即可。	
+	
+
+	
+day15:
+	函数乱七八糟一顿写，明天再整理吧
+	目录也可以写到参数的配置文件中
+
+	
+day16:
+	删除connection跟sockethandler里的close函数
+	删除connection调用deleteconnection之前的pop调用，把pop放在了sockethandler的西沟函数中
+	
+	大改，server中加了函数，connection中加了函数跟变量
+	增加了bridge中间类，用于socket的server跟httpcontroller进行信息交换
+	
+	改的太多了，但是程序还不能正常运行，明天修bug
+	
+	把connection的监听放到了http建立连接后面，不然connection监听到了事件，http还没把这个fd加进去
+
+	把sockethandler的update从|=改成了=。 
+	
+	把httpcontroler的返回update事件增加了一个EPOLLET
+
+	debug了半天，目前已经可以按流程正常来一次读和写了，但是写完以后web客户端没收到主页数据
+
+
+
+day17:
+	增加debug调是信息:set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g")
+	构建时：cmake -DCMAKE_BUILD_TYPE=Debug..
+	respons_handler目录设置错误
+	解析head时数据传输少了，head跟head之间也是\r\n间隔的
+	发送数据的响应头缺少了\r\n，加进去后已经可以成功的显示主页了!!
+
+	server类中增加了ip，port，timer，timeout文件读取参数功能，不需要在类中定义变量和路径了（除了配置文件的路径）
+	acceptor类初始化时ip和port采用server传参，不定义全局常量了
+	sockethandler中漏掉了isInEpoll的实现，已补
+
+	httpcontroller增加连接的函数中，如果已经有了这个fd，那么就直接不新建了，就利用之前的内存。
+
+
+	突然发现，如果浏览器一直刷新网页的话，那么服务器就崩了。。目前设了一个锁上去，但是效率底下，无法解决问题
+
+	更改了server和httpcontroller的一些删除顺序后，没有fd冲突的问题了，现在有一个吐核的问题（在responsse handler的clear()中），更新一下gdb再调是
+	吐核问题已经解决，原来是responsehandler有个指针变量没初始化
+
+	但是如果同一个客户端一直发送请求，到了后面的时候server已经不write了，感觉可能是什么东西爆满了,感觉像是浏览器的问题，已经不发送关闭的请求了，这个时候需要把timeout调小一点，可能就好了，逝世
+
+	在Epoll的push中居然出现了event_为空的情况，不理解。。
+
+day18:
+	debug了半天，实在是太混乱了，既然会update空的fd，或者handler空的fd，那就在做之前检查一下，如果是空的，就让另一方删除该fd
+	堆timer增加了指定fd删除功能（防止出现fd被删除，但是堆在courtingtime，然后新的fd进来了，但是堆倒计时over了），在soceethandler西沟函数调用
+	有一些变量使用前没有初始化，比如buffer 里的 iovector
+	目前的问题是内存错误，正在查找可能的bug
+	server没有close fp
+
+	reserve后好了一点，但是还是有各种内存的问题，只有关掉堆内存问题才能解决，一定是堆的问题，这两天解决堆的问题，然后再完善一下http协议
+
+
+day19:
+	这次应该是真的找到内存错误的原因了：当新连接进来的时候，acceptor主线程添加connection，在添加connection完成以后，会调用push，将fd放到epoll跟timer中。
+	但是顺序是先放到了epoll，后放timer。此时如果放了epoll，那么subreactor会立刻监听，此时如果主线程跟loop线程同时调用push函数，会出现错误。
+	解决方案1：先主线程调用push，再放到epoll中进行监听。 安全。
+	解决方案2：加个锁，主线程push的时候子线程不能push。 感觉好像第一种方案更好。
+	
+	发现问题，heap_是空的，但是要删除的fd下标在hash_中是1。由于reserve了内存，导致back没有出错，但是pop_back()就报错了
+	感觉子线程在处理removeExpire的时候，主线程也能push，也会造成资源冲突
+	问题彻底解决，手写高性能队列实现主线程与子线程错峰访问堆
+
+
+day20:
+	更新了网站资源，使用了开原项目的简单html增加了一些功能
+	responsor的write函数中有错误，已改
+	request函数增加了处理post的函数
+	request函数中增加了本地html的文件名称
+	写一个简单的处理登陆和注册的方法
+	responsor的write函数中没有处理一次写不完数据的情况，增加了errno判定后解决图片只能加载一半的问题
+	responsor中的文件映射错误，nsword改msword，js后面的空格删掉
+	
+	使用前端项目配置，但是加载资源很不稳定，需要测试找原因
+	
+
+
+
+
+day21:
+	发现bug，因为边缘出发模式导致有请求在缓冲区，需要处理循环读（在写完当前响应后，一直读到空，然后把类型改为epollin）
+	将buffer的read函数返回值改为void
+	将request读完read函数后，返回buffer读到的长度，如果长度为0，那么说明该监听读事件了
+	
+	为response_handler增加了缓冲区
+	边缘模式下可以正常运行，但是好像有坏内存
+
+	bug太多了，麻了。发现acceptor中的回调函数没有用youzhi引用，但是居然可以运行
+
+
+	
+day22:
+	debug了一天，一整天，毫不夸张的说，发现segmentfault的原因是因为将fd从epoll上移除后，接下来epoll会检测到一个任意值的fd，而且该fd的对应的handler的地址值就
+	是刚才移除的地址值，那么这个地址一定是个空地址，这个事件也是个非法事件。 排查各种原因后都不明白这种情况是如何发生的，将web主页改成小数据主页就没问题了，应该是
+	属于高并发产生的问题，先简单写一下日志功能，然后根据日志慢慢调试吧。。。

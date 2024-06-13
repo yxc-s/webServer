@@ -1,0 +1,1 @@
+/usr/bin/c++   -fPIC -Wall -Wextra -std=c++17 -pthread -Wno-unused-parameter -Wno-attributes -g -O0 -ggdb -fno-omit-frame-pointer -fno-optimize-sibling-calls   -fPIC CMakeFiles/hpts.dir/hpts.cpp.o  -o bin/hpts -Wl,-rpath,/home/yxc/文档/server/day22/build/lib lib/libsockbase_lib.so lib/libhttpbase_lib.so 

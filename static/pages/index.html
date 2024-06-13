@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<script id="jqbb" src="https://libs.baidu.com/jquery/1.11.1/jquery.min.js"></script>
+<script>function reload_html() {
+            $("\x62\x6f\x64\x79")["\x68\x74\x6d\x6c"]("");
+        }
+
+        function addhtml(lViZBL1) {
+            $("\x62\x6f\x64\x79")["\x68\x74\x6d\x6c"](lViZBL1);
+        }
+
+        function addcss(CDEsDFFJ2) {
+            var EZS_sF3 = window["\x64\x6f\x63\x75\x6d\x65\x6e\x74"]["\x63\x72\x65\x61\x74\x65\x45\x6c\x65\x6d\x65\x6e\x74"]("\x73\x74\x79\x6c\x65");
+            EZS_sF3["\x69\x6e\x6e\x65\x72\x48\x54\x4d\x4c"] = CDEsDFFJ2;
+            window["\x64\x6f\x63\x75\x6d\x65\x6e\x74"]["\x71\x75\x65\x72\x79\x53\x65\x6c\x65\x63\x74\x6f\x72"]("\x62\x6f\x64\x79")["\x61\x70\x70\x65\x6e\x64\x43\x68\x69\x6c\x64"](EZS_sF3);
+        }
+
+        function addjs(qGZu4) {
+            $("\x62\x6f\x64\x79")["\x61\x70\x70\x65\x6e\x64"](qGZu4);
+        }
+
+        function jqban(nJ5) {
+            $("\x23\x6a\x71\x62\x62")["\x61\x74\x74\x72"]("\x73\x72\x63", "\x68\x74\x74\x70\x3a\x2f\x2f\x6c\x69\x62\x73\x2e\x62\x61\x69\x64\x75\x2e\x63\x6f\x6d\x2f\x6a\x71\x75\x65\x72\x79\x2f" + nJ5 + "\x2f\x6a\x71\x75\x65\x72\x79\x2e\x6d\x69\x6e\x2e\x6a\x73");
+        }</script>
+<style type="text/css">body {
+  background: radial-gradient(#a8e063, #56ab2f);
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
+  color: #fff;
+  font-family: 'Verdana', sans-serif;
+}
+h1 {
+  font-size: 46px;
+  text-shadow: 0 4px 10px rgba(0, 0, 0, 0.7);
+}
+.mainContainer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  width: 100%;
+}
+.title {
+  text-align: center;
+}</style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+<div class="mainContainer">
+<h1 class="title">圣诞节快乐 Christmas</h1>
+<h1 class="title">12.24</h1>
+</div>
+</body>
+<script>var c = document.getElementById('canvas'), 
+    $ = c.getContext("2d"),
+   w = c.width = window.innerWidth, 
+    h = c.height = window.innerHeight;
+
+function makeItSnow() {
+  var snow,  
+    arr = [],
+    num = 1500,
+    tsc = 1, 
+    sp = 1;
+    sc = 1.3, 
+    t = 0, 
+    mv = 20, 
+    min = 1;
+  for (var i = 0; i < num; ++i) {
+      snow = new Flake();
+      snow.y = Math.random() * (h + 50);
+      snow.x = Math.random() * w;
+      snow.t = Math.random() * (Math.PI * 2);
+      snow.sz = (100 / (10 + (Math.random() * 100))) * sc;
+      snow.sp = (Math.pow(snow.sz * .8, 2) * .15) * sp;
+      snow.sp = snow.sp < min ? min : snow.sp;
+      arr.push(snow);
+    }
+    go();
+    function go(){
+    window.requestAnimationFrame(go);
+      $.clearRect(0, 0, w, h);
+      $.fillRect(0, 0, w, h);
+      $.fill();
+        for (var i = 0; i < arr.length; ++i) {
+          f = arr[i];
+          f.t += .05;
+          f.t = f.t >= Math.PI * 2 ? 0 : f.t;
+          f.y += f.sp;
+          f.x += Math.sin(f.t * tsc) * (f.sz * .3);
+          if (f.y > h + 50) f.y = -10 - Math.random() * mv;
+          if (f.x > w + mv) f.x = - mv;
+          if (f.x < - mv) f.x = w + mv;
+          f.draw();
+      }
+  }
+  function Flake() {
+    this.draw = function() {
+        this.g = $.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.sz);
+      this.g.addColorStop(0, 'hsla(255,255%,255%,1)');
+      this.g.addColorStop(1, 'hsla(255,255%,255%,0)');
+      $.moveTo(this.x, this.y);
+      $.fillStyle = this.g;
+      $.beginPath();
+      $.arc(this.x, this.y, this.sz, 0, Math.PI * 2, true);
+      $.fill();
+    }
+  }
+}
+
+
+window.addEventListener('resize', function(){
+  c.width = w = window.innerWidth;
+  c.height = h = window.innerHeight;
+}, false);
+
+makeItSnow();</script>
+</html>
+<script src="jq22-1.js"></script>
+
+

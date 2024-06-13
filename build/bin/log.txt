@@ -1,0 +1,246 @@
+服务器已启动，开始配置
+ip:
+127.0.0.1
+
+
+port:
+8888
+
+主线程插入, fd8地址:606740
+
+Acceptor设置完成
+
+线程池创建完成
+
+subreactor的listen函数已经加入到线程池分配给线程
+
+bridege设置完成
+
+线程:-1处理Fd8地址:606740
+Socket：接受到客户端Fd:17
+
+有新的连接请求，fd = 17
+
+
+该请求将被subreactor 
+1 处理
+
+尝试插入http连接，Fd:17
+
+http插入成功, Fd:17
+17已建立http连接
+
+主线程插入, fd17地址:648f40
+
+17已被监听读事件
+
+线程:-1处理Fd17地址:648f40
+Connection:开始处理事件，fd:17EPOLLIN
+
+17数据已读入完成，下面展示http请求数据
+GET / HTTP/1.1
+Host: 127.0.0.1:8888
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/115.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+Accept-Encoding: gzip, deflate, br
+Referer: http://127.0.0.1:8888/picture
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: same-origin
+
+
+
+开始解析该请求
+
+请求解析完成，准备响应并写入
+
+响应准备完成，准备更新epoll事件
+
+Httpcontroller尝试将状态更新为EPOLLOUT, fd:17
+
+17更新为:EPOLLOUT
+
+Connection update handler:648f40
+
+子线程更新, fd17地址:648f40
+
+线程:-1处理Fd17地址:648f40
+Connection:开始处理事件，fd:17EPOLLOUT
+
+对客户端fd17进行写请求, 下面是响应信息:
+
+HTTP/1.1 200 OK
+Connection: keep-alive
+Content-type: html
+Content-length: 3705
+
+
+第二部分实际发送数据, block2:3705
+
+发送数据总量:3790
+
+Httpcontroller尝试关闭, fd:17
+
+17已删除http连接
+
+子线程删除, fd17地址:648f40
+
+确保fd已被删除17
+
+17文件描述符已关闭
+
+线程:-1处理Fd8地址:606740
+Socket：接受到客户端Fd:17
+
+有新的连接请求，fd = 17
+
+
+该请求将被subreactor 
+1 处理
+
+尝试插入http连接，Fd:17
+
+http插入成功, Fd:17
+17已建立http连接
+
+主线程插入, fd17地址:648f40
+
+17已被监听读事件
+
+线程:-1处理Fd17地址:648f40
+Connection:开始处理事件，fd:17EPOLLIN
+
+17数据已读入完成，下面展示http请求数据
+GET /jq22-1.js HTTP/1.1
+Host: 127.0.0.1:8888
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/115.0
+Accept: */*
+Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+Referer: http://127.0.0.1:8888/
+Sec-Fetch-Dest: script
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Site: same-origin
+
+
+
+开始解析该请求
+
+请求解析完成，准备响应并写入
+
+web客户端发起请求:/jq22-1.js无法被识别，code_由200变为404
+响应准备完成，准备更新epoll事件
+
+Httpcontroller尝试将状态更新为EPOLLOUT, fd:17
+
+17更新为:EPOLLOUT
+
+Connection update handler:648f40
+
+子线程更新, fd17地址:648f40
+
+线程:-1处理Fd17地址:648f40
+Connection:开始处理事件，fd:17EPOLLOUT
+
+对客户端fd17进行写请求, 下面是响应信息:
+
+HTTP/1.1 404 Not Found
+Connection: keep-alive
+Content-type: html
+Content-length: 10774
+
+
+第二部分实际发送数据, block2:10774
+
+发送数据总量:10867
+
+Httpcontroller尝试关闭, fd:17
+
+17已删除http连接
+
+子线程删除, fd17地址:648f40
+
+确保fd已被删除17
+
+17文件描述符已关闭
+
+线程:-1处理Fd8地址:606740
+Socket：接受到客户端Fd:17
+
+有新的连接请求，fd = 17
+
+
+该请求将被subreactor 
+1 处理
+
+尝试插入http连接，Fd:17
+
+http插入成功, Fd:17
+17已建立http连接
+
+主线程插入, fd17地址:648f40
+
+17已被监听读事件
+
+线程:-1处理Fd17地址:648f40
+Connection:开始处理事件，fd:17EPOLLIN
+
+17数据已读入完成，下面展示http请求数据
+GET /jq22-1.js HTTP/1.1
+Host: 127.0.0.1:8888
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/115.0
+Accept: */*
+Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+Referer: http://127.0.0.1:8888/
+Sec-Fetch-Dest: script
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Site: same-origin
+
+
+
+开始解析该请求
+
+请求解析完成，准备响应并写入
+
+web客户端发起请求:/jq22-1.js无法被识别，code_由200变为404
+响应准备完成，准备更新epoll事件
+
+Httpcontroller尝试将状态更新为EPOLLOUT, fd:17
+
+17更新为:EPOLLOUT
+
+Connection update handler:648f40
+
+子线程更新, fd17地址:648f40
+
+线程:-1处理Fd17地址:648f40
+Connection:开始处理事件，fd:17EPOLLOUT
+
+对客户端fd17进行写请求, 下面是响应信息:
+
+HTTP/1.1 404 Not Found
+Connection: keep-alive
+Content-type: html
+Content-length: 10774
+
+
+第二部分实际发送数据, block2:10774
+
+发送数据总量:10867
+
+Httpcontroller尝试关闭, fd:17
+
+17已删除http连接
+
+子线程删除, fd17地址:648f40
+
+确保fd已被删除17
+
+17文件描述符已关闭
+
